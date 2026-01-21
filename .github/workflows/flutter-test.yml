@@ -1,33 +1,42 @@
-name: Flutter Tests
+name: Flutter CI
 
 on:
   push:
     branches:
       - main
-      - master
+    #   - master
   pull_request:
     branches:
       - main
-      - master
+    #   - master
 
 jobs:
   test:
     runs-on: ubuntu-latest
 
     steps:
+      # Checkout the code
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # Setup Flutter
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.10.0'
 
+      # Install dependencies
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Run tests
+      # Analyze code
+      - name: Run Flutter Analyze
+        run: flutter analyze
+
+      # Run tests
+      - name: Run Flutter Tests
         run: flutter test
 
-      - name: Run widget tests
-        run: flutter test test/
+      # Build APK (optional, can also build iOS or web)
+      - name: Build APK
+        run: flutter build apk --release
